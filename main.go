@@ -2,7 +2,6 @@ package main
 
 import (
 	"duckhue01/ps/src/ds/array"
-	// "fmt"
 )
 
 func main() {
