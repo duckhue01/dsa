@@ -1,7 +1,6 @@
-package search_test
+package search
 
 import (
-	"duckhue01/ps/src/al/search"
 	"testing"
 )
 
@@ -22,19 +21,18 @@ var pairs = []Pair{
 func TestLinear(t *testing.T) {
 
 	for i := 0; i < len(pairs); i++ {
-		result := search.Linear(pairs[i].inp1, pairs[i].inp2)
+		result := Linear(pairs[i].inp1, pairs[i].inp2)
 		if result != pairs[i].want {
 			t.Fatalf("test case %d: func(%v, %d) = %v but want match for %v", i, pairs[i].inp1, pairs[i].inp2, result, pairs[i].want)
 		}
 	}
 }
 
-
-func TestBinary(t * testing.T) {
+func TestBinary(t *testing.T) {
 	for i := 0; i < len(pairs); i++ {
-		result := search.Binary(pairs[i].inp1, pairs[i].inp2)
+		result := Binary(pairs[i].inp1, pairs[i].inp2)
 		if result != pairs[i].want {
 			t.Fatalf("test case %d: func(%v, %d) = %v but want match for %v", i, pairs[i].inp1, pairs[i].inp2, result, pairs[i].want)
 		}
-	}	
+	}
 }
