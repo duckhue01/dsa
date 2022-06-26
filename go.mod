@@ -1,3 +1,3 @@
-module duckhue01/ps
+module github.com/duckhue01/learn/ps
 
-go 1.17
+go 1.18
