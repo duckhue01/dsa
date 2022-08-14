@@ -2,8 +2,6 @@ package array
 
 import "testing"
 
-
-
 // one away: there are three types of edits that can be performed on string
 // insert a character, remove a character, or replace a character. Given
 // two strings, write a function to check if they are one edit(or zero edit) away
@@ -15,10 +13,8 @@ import "testing"
 // pale, bake -> false
 
 func OneAway(str1 []rune, str2 []rune) bool {
-
 	return false
 }
-
 
 func TestOneAway(t *testing.T) {
 	type args struct {
