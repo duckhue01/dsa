@@ -1,9 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"encoding/binary"
+	"fmt"
+)
 
 func main() {
 
-	a := make([]int, 100, 100)
-	fmt.Println(a[1])
+	b := make([]byte, 2)
+
+	binary.LittleEndian.PutUint16(b, 12311)
+	fmt.Printf("%s", b)
+
 }
