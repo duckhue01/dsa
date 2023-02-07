@@ -1,0 +1,1 @@
+## This Repo show how easy it was to implement data structure and algorithms in golang.

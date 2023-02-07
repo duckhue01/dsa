@@ -11,50 +11,44 @@ import (
 // your method should return the original string. You can assume the string as only uppercase
 // and lowercase letters(a-z)
 
-// solution #1
-func com(c byte, n int) string {
+func com(token byte, n int) string {
 	if n == 1 {
-		return string(c)
+		return fmt.Sprint(string(token), n)
 	}
-	return fmt.Sprint(string(c), n)
+
+	return fmt.Sprint(string(token), n)
 }
 
-func compression01(orig string) string {
-	olen := len(orig)
-
-	if olen == 0 {
-		return orig
+func compression(o string) string {
+	if len(o) == 0 {
+		return o
 	}
 
-	prev := orig[0]
+	prev := o[0]
 	counter := 1
-	cstring := ""
-	clen := 0
+	compressed := ""
 
-	for i := 1; i < olen; i++ {
-		if prev != orig[i] {
-			res := com(prev, counter)
-			cstring += res
-			clen += len(res)
-			if clen >= olen {
-				return orig
+	for i := 1; i < len(o); i++ {
+		if prev != o[i] {
+			compressed += com(prev, counter)
+			if len(compressed) >= len(o) {
+				return o
 			}
-			prev = orig[i]
+			prev = o[i]
 			counter = 1
 		} else {
 			counter++
 		}
 	}
-	res := com(prev, counter)
-	cstring += res
-	clen += len(res)
-	if clen >= olen {
-		return orig
+
+	compressed += com(prev, counter)
+	if len(compressed) >= len(o) {
+		return o
 	}
-	return cstring
+	return compressed
 }
 
-func Test_compression01(t *testing.T) {
+func Test_compression(t *testing.T) {
 	type args struct {
 		orig string
 	}
@@ -66,110 +60,65 @@ func Test_compression01(t *testing.T) {
 		{
 			name: "#1",
 			args: args{
-				orig: "aaabbcddd",
+				orig: "aaa",
 			},
-			want: "a3b2cd3",
+			want: "a3",
+		},
+		{
+			name: "#2",
+			args: args{
+				orig: "aa",
+			},
+			want: "aa",
+		},
+		{
+			name: "#3",
+			args: args{
+				orig: "abc",
+			},
+			want: "abc",
+		},
+		{
+			name: "#4",
+			args: args{
+				orig: "abb",
+			},
+			want: "abb",
+		},
+		{
+			name: "#5",
+			args: args{
+				orig: "aaaa",
+			},
+			want: "a4",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := compression01(tt.args.orig); got != tt.want {
+			if got := compression(tt.args.orig); got != tt.want {
 				t.Errorf("compression() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-// Benchmark_compression01-8   	  186748	      5395 ns/op	     720 B/op	      38 allocs/op
-func Benchmark_compression01(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		compression01("asdasdadaaasdasdadaaaa")
-	}
-}
-
-// solution #2
-type atom struct {
-	key     byte
-	counter int
-}
-
-func put(s *string, a *atom) int {
-	*s = fmt.Sprint(*s, string(a.key), a.counter)
-	return len(*s)
-}
-
-func compression02(o string) string {
-	oLen := len(o)
-	if oLen == 0 {
-		return o
-	}
-
-	a := &atom{
-		key:     o[0],
-		counter: 1,
-	}
-
-	compressed := ""
-
-	for i := 1; i < oLen; i++ {
-		if a.key != o[i] {
-			cLen := put(&compressed, a)
-			if cLen >= oLen {
-				return o
-			}
-			a = &atom{
-				key:     o[i],
-				counter: 1,
-			}
-		} else {
-			a.counter++
+// Benchmark_compression-8   	   62589	     17931 ns/op	    1327 B/op	      48 allocs/op
+func Benchmark_compression(b *testing.B) {
+	b.Run("#1", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			compression("asdasdadaaasdasdadaaaa")
 		}
-	}
+	})
 
-	// put last element to c
-	cLen := put(&compressed, a)
-	if cLen >= oLen {
-		return o
-	}
-	return compressed
+	b.Run("#2", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			compression("abc")
+		}
+	})
 }
 
-func Test_compression02(t *testing.T) {
-	type args struct {
-		o string
-	}
-	tests := []struct {
-		name string
-		args args
-		want string
-	}{
-		{
-			name: "#1",
-			args: args{
-				o: "aabbccccc",
-			},
-			want: "a2b2c5",
-		},
-		{
-			name: "#2",
-			args: args{
-				o: "abc",
-			},
-			want: "abc",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := compression02(tt.args.o); got != tt.want {
-				t.Errorf("compression02() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-// Benchmark_compression02-8   	   48879	     27357 ns/op	    1533 B/op	      60 allocs/op
-func Benchmark_compression02(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		compression02("asdasdadaaasdasdadaaaa")
-	}
+func Fuzz_compression(f *testing.F) {
+	f.Fuzz(func(t *testing.T, o string) {
+		compression(o)
+	})
 }

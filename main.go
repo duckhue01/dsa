@@ -1,15 +1,12 @@
 package main
 
-import (
-	"encoding/binary"
-	"fmt"
-)
+import "fmt"
+
+func sum(a, b int) int {
+	return a + b
+}
 
 func main() {
-
-	b := make([]byte, 2)
-
-	binary.LittleEndian.PutUint16(b, 12311)
-	fmt.Printf("%s", b)
-
+	res := sum(1, 10)
+	fmt.Println(res)
 }

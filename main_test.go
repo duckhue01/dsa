@@ -1,19 +1,15 @@
 package main
 
-import "testing"
+import (
+	"testing"
+)
 
 func Test_main(t *testing.T) {
-	tests := []struct {
-		name string
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			main()
-		})
-	}
+	t.Run("test", func(t *testing.T) {
+		_ = sum(1, 10)
+	})
 }
+
 func BenchmarkMain(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		main()

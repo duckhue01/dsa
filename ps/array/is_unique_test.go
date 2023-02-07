@@ -8,15 +8,16 @@ import (
 
 // Is Unique: Implement an algorithm to determine if a string has all unique characters. What if you cannot use additional data structures?
 
-// the confusions:
+// confusion:
 // + how many distinct characters will be on string?
 // + what is the encoding algorithms we use to encode the character?
 
-// the ideas:
-// the reason why i using []rune instead of string is string is array of byte and go using utf8 to encode char so when a char need more than 8 bit to encode to present one char will need more than one byte what is the encoding algorithm we using utf8 or ascii
+// idea:
+// the reason why i using string instead of string is string is array of byte and go using utf8 to encode char so when a char need more than 8 bit to encode to present one char will need more than one byte what is the encoding algorithm we using utf8 or ascii
 // if we cannot using additional data structure we will using two for loop but the TC is O(n^2). Instead, we use the bit presentation and bitwise operator to check and store the existed characters, the TC is O(n)
 
-// the conclusions:
+// conclusion:
+// using for range instead of normal for loop because for range will loop over the rune
 
 const (
 	ERR_NOT_IN_RANGE = "Char not in valid range"
@@ -25,7 +26,7 @@ const (
 // idea:
 // using map to check if a character occurred in map or not. This way we don't have make a whole loop to find duplication. we merely using O(1) operation map produce to check whether or not string is existed.
 // time complexity: O(n) in worse case
-func isUniqueUsingMap(s []rune) bool {
+func isUniqueUsingMap(s string) bool {
 	// in case string s merely include ascii characters
 	if len(s) > 128 {
 		return false
@@ -48,7 +49,7 @@ func isUniqueUsingMap(s []rune) bool {
 
 // idea: the minimal accessible unit of memory is one byte so even if we set value type is boolean it will using 8 bit to present to reduce the memory usage we will using 64 bit to present 64 possible character and use & bitwise operation to check if char is presented and [|, ^] to merge bit string
 // time complexity: O(n) in worse case
-func isUniqueUsingInt64(s []rune) (bool, error) {
+func isUniqueUsingInt64(s string) (bool, error) {
 
 	const (
 		MIN_CHAR = 64
@@ -80,7 +81,7 @@ func isUniqueUsingInt64(s []rune) (bool, error) {
 
 // idea:
 // time complexity: O(n) in worse case
-func isUniqueUsingBigInt(s []rune) bool {
+func isUniqueUsingBigInt(s string) bool {
 	acc := big.NewInt(0)
 
 	for _, v := range s {
@@ -100,7 +101,7 @@ func isUniqueUsingBigInt(s []rune) bool {
 
 func Test_isUniqueUsingInt64(t *testing.T) {
 	type args struct {
-		s []rune
+		s string
 	}
 	tests := []struct {
 		name    string
@@ -111,7 +112,7 @@ func Test_isUniqueUsingInt64(t *testing.T) {
 		{
 			name: "expect ERR_NOT_IN_RANGE when input invalid values",
 			args: args{
-				s: []rune{1, 2, 3},
+				s: "123",
 			},
 			want:    false,
 			wantErr: errors.New(ERR_NOT_IN_RANGE),
@@ -119,7 +120,7 @@ func Test_isUniqueUsingInt64(t *testing.T) {
 		{
 			name: "expect true when input three different values",
 			args: args{
-				s: []rune{'a', 'b', 'c'},
+				s: "abc",
 			},
 			want:    true,
 			wantErr: nil,
@@ -127,7 +128,7 @@ func Test_isUniqueUsingInt64(t *testing.T) {
 		{
 			name: "expect false when input set have same value",
 			args: args{
-				s: []rune{'a', 'b', 'b'},
+				s: "aab",
 			},
 			want:    false,
 			wantErr: nil,
@@ -135,7 +136,7 @@ func Test_isUniqueUsingInt64(t *testing.T) {
 		{
 			name: "expect true when input have one value",
 			args: args{
-				s: []rune{'a'},
+				s: "a",
 			},
 			want:    true,
 			wantErr: nil,
@@ -161,32 +162,31 @@ func Test_isUniqueUsingInt64(t *testing.T) {
 
 func Test_isUniqueUsingMap(t *testing.T) {
 	type args struct {
-		s []rune
+		s string
 	}
 	tests := []struct {
 		name string
 		args args
 		want bool
 	}{
-
 		{
 			name: "expect true when input three different values",
 			args: args{
-				s: []rune{'a', 'b', 'c'},
+				s: "abc",
 			},
 			want: true,
 		},
 		{
 			name: "expect false when input set have same value",
 			args: args{
-				s: []rune{'a', 'b', 'b'},
+				s: "aab",
 			},
 			want: false,
 		},
 		{
 			name: "expect true when input have one value",
 			args: args{
-				s: []rune{'a'},
+				s: "a",
 			},
 			want: true,
 		},
@@ -202,7 +202,7 @@ func Test_isUniqueUsingMap(t *testing.T) {
 
 func Test_isUniqueUsingBigInt(t *testing.T) {
 	type args struct {
-		s []rune
+		s string
 	}
 	tests := []struct {
 		name string
@@ -212,21 +212,21 @@ func Test_isUniqueUsingBigInt(t *testing.T) {
 		{
 			name: "expect true when input three different values",
 			args: args{
-				s: []rune{'a', 'b', 'c'},
+				s: "abc",
 			},
 			want: true,
 		},
 		{
 			name: "expect false when input set have same value",
 			args: args{
-				s: []rune{'a', 'b', 'b'},
+				s: "aab",
 			},
 			want: false,
 		},
 		{
 			name: "expect true when input have one value",
 			args: args{
-				s: []rune{'a'},
+				s: "a",
 			},
 			want: true,
 		},
@@ -241,23 +241,24 @@ func Test_isUniqueUsingBigInt(t *testing.T) {
 }
 
 func Fuzz_isUnique(f *testing.F) {
-	f.Fuzz(func(t *testing.T, runes []rune) {
+	f.Fuzz(func(t *testing.T, s string) {
 		t.Run("isUniqueUsingMap", func(t *testing.T) {
-			isUniqueUsingMap(runes)
+			isUniqueUsingMap(s)
 		})
 
 		t.Run("isUniqueUsingInt64", func(t *testing.T) {
-			isUniqueUsingInt64(runes)
+			isUniqueUsingInt64(s)
 		})
 
 		t.Run("isUniqueUsingBigInt", func(t *testing.T) {
-			isUniqueUsingBigInt(runes)
+			isUniqueUsingBigInt(s)
 		})
 	})
 }
 
 func Benchmark_isUnique(b *testing.B) {
-	data := []rune{1, 2, 3, 4, 5}
+	data := "abc"
+
 	b.Run("isUniqueUsingMap", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			isUniqueUsingMap(data)
@@ -275,16 +276,4 @@ func Benchmark_isUnique(b *testing.B) {
 			isUniqueUsingBigInt(data)
 		}
 	})
-}
-
-func TestXxx(t *testing.T) {
-	temp := big.NewInt(0)
-	acc := big.NewInt(0)
-	curr := new(big.Int).SetInt64(1)
-
-	temp.Lsh(curr, uint(10))
-	t.Log(temp.And(curr, acc) != big.NewInt(0))
-
-	acc = temp.Xor(acc, curr)
-
 }
