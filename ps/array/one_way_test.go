@@ -42,7 +42,7 @@ func oneAway(str1 string, str2 string) (bool, error) {
 	switch gap {
 	case 0:
 		c := 0
-		for i, _ := range r1 {
+		for i := range r1 {
 			if r1[i] != r2[i] {
 				c++
 			}

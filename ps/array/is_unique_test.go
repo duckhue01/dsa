@@ -243,15 +243,15 @@ func Test_isUniqueUsingBigInt(t *testing.T) {
 func Fuzz_isUnique(f *testing.F) {
 	f.Fuzz(func(t *testing.T, s string) {
 		t.Run("isUniqueUsingMap", func(t *testing.T) {
-			isUniqueUsingMap(s)
+			_ = isUniqueUsingMap(s)
 		})
 
 		t.Run("isUniqueUsingInt64", func(t *testing.T) {
-			isUniqueUsingInt64(s)
+			_, _ = isUniqueUsingInt64(s)
 		})
 
 		t.Run("isUniqueUsingBigInt", func(t *testing.T) {
-			isUniqueUsingBigInt(s)
+			_ = isUniqueUsingBigInt(s)
 		})
 	})
 }
@@ -261,19 +261,19 @@ func Benchmark_isUnique(b *testing.B) {
 
 	b.Run("isUniqueUsingMap", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
-			isUniqueUsingMap(data)
+			_ = isUniqueUsingMap(data)
 		}
 	})
 
 	b.Run("isUniqueUsingInt64", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
-			isUniqueUsingInt64(data)
+			_, _ = isUniqueUsingInt64(data)
 		}
 	})
 
 	b.Run("isUniqueUsingBigInt", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
-			isUniqueUsingBigInt(data)
+			_ = isUniqueUsingBigInt(data)
 		}
 	})
 }

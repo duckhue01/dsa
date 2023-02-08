@@ -1,126 +1,85 @@
 package array
 
-import "testing"
-
-type (
-	args1_2 struct {
-		str1 []rune
-		str2 []rune
-	}
+import (
+	"testing"
 )
 
-var (
-	tests1_2 = []struct {
-		name    string
-		args1_2 args1_2
-		want    bool
+// Check Permutation: Given two strings,write a method to decide if one is a permutation of the other.
+
+// confusion:
+// is string include unicode character or merely ASCII characters.
+// idea:
+// put each character into a map and then compare every single character
+// if string include unicode character we have to convert it into []rune or using for range to get full unicode element
+// assumption:
+// string just include ASCII characters
+// conclusion:
+
+// idea: we push all of two strings into 2 map respectively then compare these two
+// time complexity: O(n) in worse case
+// space complexity: O(n) in worse case
+func detectPermutation(a, b string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	m1 := make(map[rune]int)
+	m2 := make(map[rune]int)
+
+	for _, v := range a {
+		m1[v]++
+	}
+	for _, v := range b {
+		m2[v]++
+	}
+	for k := range m1 {
+		if m1[k] != m2[k] {
+			return false
+		}
+	}
+
+	return true
+}
+
+func Test_detectPermutation(t *testing.T) {
+	type args struct {
+		a string
+		b string
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
 	}{
 		{
-			name: "01",
-			args1_2: args1_2{
-				str1: []rune{'a'},
-				str2: []rune{'a'},
+			name: "input b is permutation of a, expect true",
+			args: args{
+				a: "abcd",
+				b: "adbc",
 			},
 			want: true,
 		},
 		{
-			name: "02",
-			args1_2: args1_2{
-				str1: []rune{'a', 'b'},
-				str2: []rune{'a'},
+			name: "input b isn't permutation of a, expect false",
+			args: args{
+				a: "abcd",
+				b: "aabc",
 			},
 			want: false,
 		},
-
 		{
-			name: "01",
-			args1_2: args1_2{
-				str1: []rune{'a', 'b'},
-				str2: []rune{'b', 'a'},
+			name: "input b has len different from a, expect false",
+			args: args{
+				a: "abcd",
+				b: "aa",
 			},
-			want: true,
-		},
-		{
-			name: "01",
-			args1_2: args1_2{
-				str1: []rune{'a', 'b', 'c'},
-				str2: []rune{'c', 'a', 'b'},
-			},
-			want: true,
+			want: false,
 		},
 	}
-)
-
-func Test_checkPermutation01(t *testing.T) {
-	for _, tt := range tests1_2 {
+	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := checkPermutation01(tt.args1_2.str1, tt.args1_2.str2); got != tt.want {
-				t.Errorf("checkPermutation01() = %v, want %v", got, tt.want)
+			if got := detectPermutation(tt.args.a, tt.args.b); got != tt.want {
+				t.Errorf("detectPermutation() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
-
-func Test_checkPermutation02(t *testing.T) {
-	for _, tt := range tests1_2 {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := checkPermutation02(tt.args1_2.str1, tt.args1_2.str2); got != tt.want {
-				t.Errorf("checkPermutation01() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-// check permutation: given two strings, write a method to decide if one is
-// a permutation of the other.
-
-// idea:
-// gradually add each element of add each element of array 1 to map at the same time add it by one
-// do the same thing with array 2
-// compare length of two map and each element in that map.
-func checkPermutation01(str1 []rune, str2 []rune) bool {
-	if len(str1) != len(str2) {
-		return false
-	}
-	map1 := make(map[rune]int)
-	map2 := make(map[rune]int)
-
-	for _, v := range str1 {
-		map1[v]++
-	}
-	for _, v := range str2 {
-		map2[v]++
-	}
-	for k := range map1 {
-		if map1[k] != map2[k] {
-			return false
-		}
-	}
-
-	return true
-}
-
-// wrapping up:
-// time complexity: O(n)
-// space complexity: O(n)
-
-func checkPermutation02(str1 []rune, str2 []rune) bool {
-	if len(str1) != len(str2) {
-		return false
-	}
-	temp := [128]int{}
-
-	for _, v := range str1 {
-		temp[v]++
-	}
-	for _, v := range str2 {
-		if i := temp[v]; i < 0 {
-			return false
-		}
-	}
-	return true
-}
-
-// wrapping up:
-// time complexity: O(n)
-// space complexity: O(n)

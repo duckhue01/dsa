@@ -1,12 +1,23 @@
 package main
 
-import "fmt"
-
-func sum(a, b int) int {
-	return a + b
-}
+import (
+	"fmt"
+	"sync"
+)
 
 func main() {
-	res := sum(1, 10)
-	fmt.Println(res)
+	var wg sync.WaitGroup
+	a := 0
+	wg.Add(1)
+	go func() {
+		for i := 0; i < 100000; i++ {
+			a++
+		}
+		wg.Done()
+	}()
+	for i := 0; i < 100000; i++ {
+		a++
+	}
+	wg.Wait()
+	fmt.Println(a)
 }
