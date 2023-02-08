@@ -2,70 +2,98 @@ package array
 
 import "testing"
 
-type (
-	args1_4 struct {
+// palindrome permutation: given a string, write a function to check if it
+// is a permutation of palindrome. A palindrome is word or phase that is same
+// forwards and backwards. A permutation is a rearrangement of letter.
+// the palindrome does not need to be limited to just dictionary words.
+// EX:
+// Input: Tact Coa
+// Output: True (permutations: "taco cat", "atco eta", etc.)
+
+// confusing:
+// idea:
+// assumption:
+// conclusion:
+
+func Test_palindromePermutation01(t *testing.T) {
+
+	type args struct {
 		str []rune
 	}
-)
 
-var (
-	tests1_4 = []struct {
-		name    string
-		args1_4 args1_4
-		want    bool
+	tests := []struct {
+		name string
+		args args
+		want bool
 	}{
 		{
-			name: "01",
-			args1_4: args1_4{
+			name: "#1",
+			args: args{
 				str: []rune{'a', 'a'},
 			},
 			want: true,
 		},
 		{
-			name: "02",
-			args1_4: args1_4{
+			name: "#2",
+			args: args{
 				str: []rune{'a', 'b'},
 			},
 			want: false,
 		},
 
 		{
-			name: "03",
-			args1_4: args1_4{
+			name: "#3",
+			args: args{
 				str: []rune{'a'},
 			},
 			want: true,
 		},
 		{
-			name: "04",
-			args1_4: args1_4{
+			name: "#4",
+			args: args{
 				str: []rune{'a', 'b', 'c'},
 			},
 			want: false,
 		},
+		{
+			name: "#5 expect true",
+			args: args{
+				str: []rune{'a', 'b', 'a', 'b'},
+			},
+			want: true,
+		},
+		{
+			name: "#6 expect false",
+			args: args{
+				str: []rune{'a', 'b', 'b', 'b'},
+			},
+			want: false,
+		},
+		{
+			name: "#7 expect true",
+			args: args{
+				str: []rune{'a', 'b', 'b', 'b', 'a'},
+			},
+			want: true,
+		},
+		{
+			name: "#8 expect false",
+			args: args{
+				str: []rune{'a', 'b', 'b', 'c', 'd'},
+			},
+			want: false,
+		},
 	}
-)
-
-func Test_palindromePermutation01(t *testing.T) {
-	for _, tt := range tests1_4 {
+	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := palindromePermutation01(tt.args1_4.str); got != tt.want {
+			if got := palindromePermutation(tt.args.str); got != tt.want {
 				t.Errorf("palindromePermutation01() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-// palindrome permutation: given a string, write a function to check if it
-// is a permutation of palindrome. A palindrome is word or phase that is same
-// forwards and backwards. A permutation is a rearrangement of letter.
-// the palindrome does not need to be limited to just dictionary words.
-
-// EX:
-// Input: Tact Coa
-// Output: True (permutations: "taco cat", "atco eta", etc.)
-
-func palindromePermutation01(str []rune) bool {
+func palindromePermutation(str []rune) bool {
 	dic := make(map[rune]int)
 
 	for _, v := range str {
@@ -80,13 +108,13 @@ func palindromePermutation01(str []rune) bool {
 		}
 		return true
 	} else {
-		count := 0
+		opIn := false
 		for _, v := range dic {
 			if v%2 != 0 {
-				count++
-			}
-			if count > 1 {
-				return false
+				if opIn {
+					return false
+				}
+				opIn = true
 			}
 		}
 		return true

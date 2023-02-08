@@ -30,9 +30,9 @@ func abs(a int) int {
 	return a
 }
 
-func oneAway(str1 string, str2 string) (bool, error) {
-	r1 := []rune(str1)
-	r2 := []rune(str2)
+func oneAway(a, b string) (bool, error) {
+	r1 := []rune(a)
+	r2 := []rune(b)
 
 	gap := len(r2) - len(r1)
 	if abs(gap) > 1 {
@@ -41,15 +41,14 @@ func oneAway(str1 string, str2 string) (bool, error) {
 
 	switch gap {
 	case 0:
-		c := 0
+		isReplaced := false
 		for i := range r1 {
 			if r1[i] != r2[i] {
-				c++
+				if isReplaced {
+					return false, nil
+				}
+				isReplaced = true
 			}
-			if c > 1 {
-				return false, nil
-			}
-
 		}
 
 		return true, nil
