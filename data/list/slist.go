@@ -2,38 +2,37 @@ package list
 
 import "fmt"
 
-type sNode struct {
-	next *sNode
-	data int
+type Node struct {
+	Next *Node
+	Data int
 }
 
 type SList struct {
-	head *sNode
-}
-
-func New() *SList {
-	return &SList{
-		head: nil,
-	}
+	Head *Node
 }
 
 func (l *SList) Append(v int) {
-	n := &sNode{
-		next: nil,
-		data: v,
+	n := &Node{
+		Data: v,
 	}
-	if l.head != nil {
-		l.head = n
+
+	if l.Head == nil {
+		l.Head = n
 	} else {
-		n.next = l.head
-		l.head = n
+		n.Next = l.Head
+		l.Head = n
 	}
 }
 
 func (l *SList) Show() {
-	t := l.head
-	for t == nil {
-		fmt.Printf("%d: ", t.data)
-		t = t.next
+	t := l.Head
+	for t != nil {
+		if t.Next != nil {
+			fmt.Printf("%d -> ", t.Data)
+
+		} else {
+			fmt.Printf("%d\n", t.Data)
+		}
+		t = t.Next
 	}
 }
