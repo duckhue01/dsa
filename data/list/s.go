@@ -7,14 +7,16 @@ type Node struct {
 	Data int
 }
 
-type SList struct {
+type S struct {
 	Head *Node
+	Len  int
 }
 
-func (l *SList) Append(v int) {
+func (l *S) Append(v int) {
 	n := &Node{
 		Data: v,
 	}
+	l.Len += 1
 
 	if l.Head == nil {
 		l.Head = n
@@ -24,7 +26,7 @@ func (l *SList) Append(v int) {
 	}
 }
 
-func (l *SList) Show() {
+func (l *S) Show() {
 	t := l.Head
 	for t != nil {
 		if t.Next != nil {

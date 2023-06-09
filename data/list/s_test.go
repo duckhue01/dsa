@@ -5,7 +5,7 @@ import (
 )
 
 func TestSList(t *testing.T) {
-	l := new(SList)
+	l := new(S)
 
 	l.Append(1)
 	l.Append(2)
