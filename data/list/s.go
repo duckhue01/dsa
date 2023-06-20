@@ -26,6 +26,14 @@ func (l *S) Append(v int) {
 	}
 }
 
+func (s *S) Delete(v int) {
+
+}
+
+func (s *S) Search(v int) {
+
+}
+
 func (l *S) Show() {
 	t := l.Head
 	for t != nil {
@@ -37,4 +45,14 @@ func (l *S) Show() {
 		}
 		t = t.Next
 	}
+}
+
+func (l *S) ToSlice() []int {
+	s := make([]int, 0)
+	t := l.Head
+	for t != nil {
+		s = append(s, t.Data)
+		t = t.Next
+	}
+	return s
 }
